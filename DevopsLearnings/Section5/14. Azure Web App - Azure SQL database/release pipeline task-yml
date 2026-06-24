@@ -1,0 +1,58 @@
+steps:
+- task: SqlAzureDacpacDeployment@1
+  displayName: 'Run SQL Inline script'
+  inputs:
+    azureSubscription: 'My Visual Studio Professional Subscription(449214d1-cece-42d9-9bec-e11ecea9f162)'
+    ServerName: demodbserverkaruna.database.windows.net
+    DatabaseName: 'demo-db'
+    SqlUsername: sqladmin
+    SqlPassword: 'LearnAzure@2026'
+    deployType: InlineSqlTask
+    SqlInline: |
+     GO
+     IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA ='dbo' AND TABLE_NAME ='Products'))
+     BEGIN
+     
+     CREATE TABLE Products
+     (
+          ProductID int,
+          ProductName varchar(1000),
+          Quantity int
+     )
+      
+      
+     INSERT INTO Products(ProductID,ProductName,Quantity) VALUES (1,'Mobile',100)
+      
+     INSERT INTO Products(ProductID,ProductName,Quantity) VALUES (2,'Laptop',200)
+      
+     INSERT INTO Products(ProductID,ProductName,Quantity) VALUES (3,'Tabs',300)
+     
+     END
+    IpDetectionMethod: IPAddressRange
+    StartIpAddress: 0.0.0.0
+    EndIpAddress: 0.0.0.0
+    DeleteFirewallRule: false
+
+steps:
+- task: AzureAppServiceSettings@1
+  displayName: 'Azure App Service Settings: newapp994848webapp234'
+  inputs:
+    azureSubscription: 'My Visual Studio Professional Subscription(449214d1-cece-42d9-9bec-e11ecea9f162)'
+    appName: newapp994848webapp234
+    resourceGroupName: 'template-grp'
+    connectionStrings: |
+     [
+     {
+     "name": "SQLConnection",
+     "value": "Server=tcp:demodbserverkaruna.database.windows.net,1433;Initial Catalog=demo-db;Persist Security Info=False;User ID=sqladmin;Password=LearnAzure@2026;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+     "type": "SQLAzure",
+     "slotSetting": false
+     }
+     ]
+steps:
+- task: AzureWebApp@1
+  displayName: 'Azure Web App Deploy: newapp994848webapp234'
+  inputs:
+    azureSubscription: 'My Visual Studio Professional Subscription(449214d1-cece-42d9-9bec-e11ecea9f162)'
+    appType: webApp
+    appName: newapp994848webapp234
