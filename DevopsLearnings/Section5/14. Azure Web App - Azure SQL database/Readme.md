@@ -6,5 +6,6 @@ Provision SQL database
  
 1. Build Asp.net core app and push to azure repos
 2. Release pipeline - 2 tasks
-    2a. Deploy table and data in the azure sql database
+
+   2a. Deploy table and data in the azure sql database
     2b. Deploy the dotnet application to azure web app
