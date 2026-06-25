@@ -12,7 +12,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'cb2d395a-6cf3-43a8-9a6d-31bd966eb574'
-  imageRepository: 'sqlapp'
+  imageRepository: 'webapp'
   containerRegistry: 'localregistryaruna124.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/WebApp/Dockerfile'
   tag: '$(Build.BuildId)'
@@ -58,6 +58,12 @@ stages:
         zipAfterPublish: false
         arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     
+    # - task: CopyFiles@2
+    #   displayName: 'Copy Dockerfile'
+    #   inputs:
+    #     SourceFolder: '$(Build.SourcesDirectory)'
+    #     Contents: '**/Dockerfile'
+    #     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
     - task: PowerShell@2
       displayName: 'List contents of Artifact Staging Directory'
